@@ -3,10 +3,11 @@ import React from "react";
 import { NavBar } from "../ui";
 
 interface Props {
+  children: React.ReactNode;
   title?: string;
 }
 
-export const Layout: React.FC<Props> = ({ children, title }) => {
+export const Layout: React.FunctionComponent<Props> = ({ children, title }) => {
   return (
     <>
       <Head>
