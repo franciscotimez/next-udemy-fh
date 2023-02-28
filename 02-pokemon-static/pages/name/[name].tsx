@@ -3,6 +3,7 @@ import React from "react";
 
 import { pokeApi } from "../../api";
 import { PokemonData, PokemonResponse } from "../../interfaces";
+import { getPokemonInfo } from "../../utils";
 
 import PokemonPage from "../pokemon/[id]";
 
@@ -37,10 +38,8 @@ export const getStaticPaths: GetStaticPaths = async (ctx) => {
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const { name } = params as { name: string };
 
-  const { data } = await pokeApi.get<PokemonData>(`/pokemon/${name}`);
-
   return {
-    props: { pokemon: data },
+    props: { pokemon: await getPokemonInfo(name) },
   };
 };
 
