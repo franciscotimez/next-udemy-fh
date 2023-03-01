@@ -1,13 +1,16 @@
-import React from "react";
+import React, { useContext } from "react";
+
 import { AppBar, Toolbar, IconButton, Typography } from "@mui/material";
 
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
+import { UIContext } from "../../context/ui";
 
 export const NavBar: React.FunctionComponent = () => {
+  const { openSideMenu } = useContext(UIContext);
   return (
     <AppBar position="sticky">
       <Toolbar>
-        <IconButton size="large" edge="start">
+        <IconButton size="large" edge="start" onClick={openSideMenu}>
           <MenuOutlinedIcon />
         </IconButton>
         <Typography variant="h6">OpenJira</Typography>
