@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   Card,
   CardContent,
@@ -7,19 +7,24 @@ import {
   CardActions,
 } from "@mui/material";
 import { Entry } from "../../interfaces";
+import { UIContext } from "../../context/ui";
 
 interface Props {
   entry: Entry;
 }
 
 export const EntryCard: React.FunctionComponent<Props> = ({ entry }) => {
+  const { startDragging, endDragging } = useContext(UIContext);
 
   const onDragStart = (event: React.DragEvent) => {
-    console.log({event});
-    event.dataTransfer.setData('text', entry._id)
-  }
+    console.log({ event });
+    event.dataTransfer.setData("text", entry._id);
+    startDragging();
+  };
 
-  const onDragEnd = () => {}
+  const onDragEnd = () => {
+    endDragging();
+  };
 
   return (
     <Card
