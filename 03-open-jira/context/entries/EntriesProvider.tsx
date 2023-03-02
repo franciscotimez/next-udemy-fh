@@ -38,10 +38,21 @@ export const EntriesProvider: React.FunctionComponent<{
 }> = ({ children }) => {
   const [state, dispatch] = useReducer(entriesReducer, ENTRIES_INITIAL_STATE);
 
+  const addEntry = (description: string) => {
+    const newEntry: Entry = {
+      _id: uuidv4(),
+      description,
+      createdAt: Date.now(),
+      status: "pending",
+    };
+
+    dispatch({ type: "[Entries] - Add Entry", payload: newEntry });
+  };
   return (
     <EntriesContext.Provider
       value={{
         ...state,
+        addEntry,
       }}
     >
       {children}

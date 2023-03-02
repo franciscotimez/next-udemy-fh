@@ -12,7 +12,7 @@ interface Props {
   entry: Entry;
 }
 
-export const EntryCard: React.FunctionComponent<Props> = ({entry}) => {
+export const EntryCard: React.FunctionComponent<Props> = ({ entry }) => {
   return (
     <Card
       sx={{
@@ -26,7 +26,9 @@ export const EntryCard: React.FunctionComponent<Props> = ({entry}) => {
             {entry.description}
           </Typography>
         </CardContent>
-        <CardActions sx={{display: 'flex', justifyContent: 'end', paddingRight: 2}}>
+        <CardActions
+          sx={{ display: "flex", justifyContent: "end", paddingRight: 2 }}
+        >
           <Typography variant="body2">{entry.createdAt}</Typography>
         </CardActions>
       </CardActionArea>
