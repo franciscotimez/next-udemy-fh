@@ -17,9 +17,17 @@ export const EntryList: React.FunctionComponent<Props> = ({ status }) => {
     [entries, status]
   );
 
+  const allowDrop = (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+  };
+
+  const onDropEntry = (event: React.DragEvent<HTMLDivElement>) => {
+    const id = event.dataTransfer.getData("text");
+    console.log(status, { id });
+  };
+
   return (
-    // todo: Aqui haremos drop
-    <div>
+    <div onDrop={onDropEntry} onDragOver={allowDrop}>
       <Paper
         sx={{
           height: "calc(100vh - 180px)",

@@ -13,11 +13,22 @@ interface Props {
 }
 
 export const EntryCard: React.FunctionComponent<Props> = ({ entry }) => {
+
+  const onDragStart = (event: React.DragEvent) => {
+    console.log({event});
+    event.dataTransfer.setData('text', entry._id)
+  }
+
+  const onDragEnd = () => {}
+
   return (
     <Card
       sx={{
         marginBottom: 1,
       }}
+      draggable
+      onDragStart={onDragStart}
+      onDragEnd={onDragEnd}
       // eventos de drag
     >
       <CardActionArea>
