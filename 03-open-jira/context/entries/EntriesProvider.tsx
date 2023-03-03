@@ -17,13 +17,21 @@ export const EntriesProvider: React.FunctionComponent<{
   const [state, dispatch] = useReducer(entriesReducer, ENTRIES_INITIAL_STATE);
 
   const addEntry = async (description: string) => {
-    const { data } = await entriesApi.post<Entry>("/entries",{description});
+    const { data } = await entriesApi.post<Entry>("/entries", { description });
 
     dispatch({ type: "[Entries] - Add Entry", payload: data });
   };
 
-  const updateEntry = (entry: Entry) => {
-    dispatch({ type: "[Entries] - Entry Updated", payload: entry });
+  const updateEntry = async ({ _id, description, status }: Entry) => {
+    try {
+      const { data } = await entriesApi.put<Entry>(`/entries/${_id}`, {
+        description,
+        status,
+      });
+      dispatch({ type: "[Entries] - Entry Updated", payload: data });
+    } catch (error) {
+      console.log({ error });
+    }
   };
 
   const refreshEntries = async () => {

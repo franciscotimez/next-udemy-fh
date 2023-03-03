@@ -11,11 +11,14 @@ type Data =
 export default function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
   const { id } = req.query;
 
-  if (mongoose.isValidObjectId(id)) {
-    return res.status(400).json({ message: 'El Id no es valido' }); 
+  if (!mongoose.isValidObjectId(id)) {
+    return res.status(400).json({ message: 'El Id no es valido' });
   }
 
   switch (req.method) {
+    case 'GET':
+      return getEntry(req, res);
+
     case 'PUT':
       return updateEntry(req, res);
 
@@ -23,6 +26,21 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
       return res.status(400).json({ message: 'Metodo no existe' });
   }
 }
+
+const getEntry = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
+  const { id } = req.query;
+
+  await db.connect();
+
+  const entryGetted = await Entry.findById(id);
+  await db.disconnect();
+
+  if (!entryGetted) {
+    return res.status(400).json({ message: "No existe la entrada en la BD" });
+  }
+
+  return res.status(200).json(entryGetted);
+};
 
 const updateEntry = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   const { id } = req.query;
