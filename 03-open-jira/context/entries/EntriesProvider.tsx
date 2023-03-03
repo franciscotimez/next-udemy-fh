@@ -8,29 +8,7 @@ export interface EntriesState {
 }
 
 const ENTRIES_INITIAL_STATE: EntriesState = {
-  entries: [
-    {
-      _id: uuidv4(),
-      description:
-        "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Corrupti, atque.",
-      createdAt: Date.now(),
-      status: "pending",
-    },
-    {
-      _id: uuidv4(),
-      description:
-        "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Corrupti, atque.",
-      createdAt: Date.now() - 1000000,
-      status: "in-process",
-    },
-    {
-      _id: uuidv4(),
-      description:
-        "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Corrupti, atque.",
-      createdAt: Date.now() - 100000,
-      status: "finished",
-    },
-  ],
+  entries: [],
 };
 
 export const EntriesProvider: React.FunctionComponent<{
