@@ -8,3 +8,5 @@ Mongo DB url local
 ```
 mongodb://localhost:27017/entriesdb
 ```
+
+## configurar variables de entorno.
