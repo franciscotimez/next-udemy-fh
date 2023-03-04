@@ -19,8 +19,8 @@ interface Props {
   theme: string;
 }
 
-const ThemeChangerPage: NextPage<Props> = (props) => {
-  const [currentTheme, setCurrentTheme] = useState(props.theme);
+const ThemeChangerPage: NextPage<Props> = ({ theme }) => {
+  const [currentTheme, setCurrentTheme] = useState(theme);
 
   const onThemeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedTheme = event.target.value;
@@ -76,9 +76,10 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
   const { theme = "light" } = req.cookies;
   console.log({ theme });
 
+  const validThemes = ["light", "dark", "custom"];
   return {
     props: {
-      theme,
+      theme: validThemes.includes(theme) ? theme : "dark",
     },
   };
 };
