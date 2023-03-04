@@ -8,8 +8,10 @@ import {
   RadioGroup,
   FormControlLabel,
   Radio,
+  Button,
 } from "@mui/material";
 import Cookies from "js-cookie";
+import axios from "axios";
 
 import { Layout } from "../components/layouts";
 
@@ -30,8 +32,14 @@ const ThemeChangerPage: NextPage<Props> = (props) => {
     Cookies.set("theme", selectedTheme);
   };
 
+  const onClick = async () => {
+    const { data } = await axios.get("/api/hello");
+    console.log({ data });
+  };
+
   useEffect(() => {
     console.log("LocalStorage: ", localStorage.getItem("theme"));
+    console.log("Cookies: ", Cookies.get("theme"));
   }, []);
 
   return (
@@ -54,6 +62,8 @@ const ThemeChangerPage: NextPage<Props> = (props) => {
               />
             </RadioGroup>
           </FormControl>
+
+          <Button onClick={onClick}>Solicitud</Button>
         </CardContent>
       </Card>
     </Layout>
