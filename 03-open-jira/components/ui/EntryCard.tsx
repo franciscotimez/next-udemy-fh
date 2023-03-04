@@ -8,6 +8,7 @@ import {
 } from "@mui/material";
 import { Entry } from "../../interfaces";
 import { UIContext } from "../../context/ui";
+import { useRouter } from "next/router";
 
 interface Props {
   entry: Entry;
@@ -15,6 +16,7 @@ interface Props {
 
 export const EntryCard: React.FunctionComponent<Props> = ({ entry }) => {
   const { startDragging, endDragging } = useContext(UIContext);
+  const router = useRouter();
 
   const onDragStart = (event: React.DragEvent) => {
     console.log({ event });
@@ -26,8 +28,13 @@ export const EntryCard: React.FunctionComponent<Props> = ({ entry }) => {
     endDragging();
   };
 
+  const onClickCard = () => {
+    router.push(`/entries/${entry._id}`);
+  };
+
   return (
     <Card
+      onClick={onClickCard}
       sx={{
         marginBottom: 1,
       }}
