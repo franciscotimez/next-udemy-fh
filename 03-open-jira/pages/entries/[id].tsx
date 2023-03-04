@@ -59,7 +59,7 @@ export const EntryPage: NextPage<Props> = ({ entry }) => {
       status,
       description: inputValue,
     };
-    updateEntry(updatedEntry);
+    updateEntry(updatedEntry, true);
   };
 
   return (
@@ -131,7 +131,6 @@ export const EntryPage: NextPage<Props> = ({ entry }) => {
 
 // You should use getServerSideProps when:
 // - Only if you need to pre-render a page whose data must be fetched at request time
-
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   const { id } = params as { id: string };
   const entry = await dbEntries.getEntryById(id);
