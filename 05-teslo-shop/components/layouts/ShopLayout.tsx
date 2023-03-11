@@ -1,6 +1,6 @@
 import Head from "next/head";
 import React from "react";
-import { Navbar } from "../ui";
+import { Navbar, SideMenu } from "../ui";
 
 interface Props {
   children: React.ReactNode;
@@ -28,6 +28,8 @@ export const ShopLayout: React.FunctionComponent<Props> = ({
       <nav>
         <Navbar />
       </nav>
+
+      <SideMenu />
 
       <main
         style={{ margin: "80px auto", maxWidth: "1440px", padding: "0px 30px" }}
