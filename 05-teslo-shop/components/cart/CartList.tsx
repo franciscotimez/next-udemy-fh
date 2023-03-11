@@ -18,9 +18,13 @@ const productsInCart = [
   initialData.products[2],
 ];
 
-interface Props {}
+interface Props {
+  editable?: boolean;
+}
 
-export const CartList: React.FunctionComponent<Props> = () => {
+export const CartList: React.FunctionComponent<Props> = ({
+  editable = false,
+}) => {
   return (
     <>
       {productsInCart.map((product) => (
@@ -47,7 +51,11 @@ export const CartList: React.FunctionComponent<Props> = () => {
               </Typography>
 
               {/* Condicional */}
-              <ItemCounter />
+              {editable ? (
+                <ItemCounter />
+              ) : (
+                <Typography variant="h6">3 items</Typography>
+              )}
             </Box>
           </Grid>
 
@@ -59,9 +67,11 @@ export const CartList: React.FunctionComponent<Props> = () => {
             flexDirection="column"
           >
             <Typography variant="subtitle1">${product.price}</Typography>
-            <Button variant="text" color="secondary">
-              Remover
-            </Button>
+            {editable && (
+              <Button variant="text" color="secondary">
+                Remover
+              </Button>
+            )}
           </Grid>
         </Grid>
       ))}
