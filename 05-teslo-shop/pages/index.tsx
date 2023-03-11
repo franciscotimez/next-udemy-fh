@@ -1,11 +1,5 @@
 import type { NextPage } from "next";
-import {
-  Card,
-  CardActionArea,
-  CardMedia,
-  Grid,
-  Typography,
-} from "@mui/material";
+import { Typography } from "@mui/material";
 
 import { ShopLayout } from "../components/layouts";
 import { initialData } from "../database/products";
