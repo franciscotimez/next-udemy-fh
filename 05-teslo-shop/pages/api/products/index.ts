@@ -13,14 +13,11 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
   switch (req.method) {
     case 'GET':
       return getProducts(req, res);
-      break;
 
     default:
       res.status(400).json({ message: 'BadRequest' });
       break;
   }
-
-  res.status(200).json({ message: 'Example' });
 }
 
 const getProducts = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
