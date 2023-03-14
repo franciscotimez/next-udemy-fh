@@ -30,7 +30,7 @@ export const CartList: React.FunctionComponent<Props> = ({
       {productsInCart.map((product) => (
         <Grid container spacing={2} key={product.slug} sx={{ mb: 1 }}>
           <Grid item xs={3}>
-            <NextLink href="/product/slug" passHref>
+            <NextLink href={`/product/${product.slug}`} passHref>
               <Link>
                 <CardActionArea>
                   <CardMedia
