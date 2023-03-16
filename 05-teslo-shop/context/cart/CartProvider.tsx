@@ -29,9 +29,9 @@ export const CartProvider: React.FunctionComponent<Props> = ({ children }) => {
   // Efecto
   useEffect(() => {
     try {
-      const cookieProducts = Cookie.get("cart")
-        ? JSON.parse(Cookie.get("cart")!)
-        : [];
+      const cookieCart = Cookie.get("cart");
+      const cookieProducts = cookieCart ? JSON.parse(cookieCart) : [];
+
       dispatch({
         type: "[Cart] - LoadCart from cookies | storage",
         payload: cookieProducts,
