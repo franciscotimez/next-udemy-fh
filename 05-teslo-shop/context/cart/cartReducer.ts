@@ -14,6 +14,7 @@ type CartActionType =
       payload: {
          numberOfItems: number;
          subTotal: number;
+         taxRate: number;
          tax: number;
          total: number;
       };

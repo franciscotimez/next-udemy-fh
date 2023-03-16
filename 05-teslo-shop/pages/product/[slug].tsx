@@ -9,6 +9,7 @@ import { ICartProduct, IProduct, ISize } from "../../interfaces";
 import { dbProducts } from "../../database";
 import { useRouter } from "next/router";
 import { CartContext } from "../../context";
+import { currency } from "../../utils";
 
 interface Props {
   product: IProduct;
@@ -66,7 +67,7 @@ const ProductPage: NextPage<Props> = ({ product }) => {
               {product.title}
             </Typography>
             <Typography variant="subtitle1" component="h2">
-              ${product.price}
+              {currency.format(product.price)}
             </Typography>
 
             {/* cantidad */}

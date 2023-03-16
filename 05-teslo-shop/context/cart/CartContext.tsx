@@ -5,6 +5,7 @@ interface ContextProps {
   cart: ICartProduct[];
   numberOfItems: number;
   subTotal: number;
+  taxRate: number;
   tax: number;
   total: number;
 

@@ -12,6 +12,7 @@ import NextLink from "next/link";
 import { ItemCounter } from "../ui";
 import { CartContext } from "../../context/cart/CartContext";
 import { ICartProduct } from "../../interfaces/cart";
+import { currency } from "../../utils";
 
 interface Props {
   editable?: boolean;
@@ -20,7 +21,8 @@ interface Props {
 export const CartList: React.FunctionComponent<Props> = ({
   editable = false,
 }) => {
-  const { cart, updateCartQuantity } = useContext(CartContext);
+  const { cart, updateCartQuantity, removeCartProduct } =
+    useContext(CartContext);
 
   const onUpdateCartQuantity = (product: ICartProduct, newQuantity: number) => {
     product.quantity = newQuantity;
@@ -86,9 +88,13 @@ export const CartList: React.FunctionComponent<Props> = ({
               alignItems="center"
               flexDirection="column"
             >
-              <Typography variant="subtitle1">${product.price}</Typography>
+              <Typography variant="subtitle1">{currency.format(product.price)}</Typography>
               {editable && (
-                <Button variant="text" color="secondary">
+                <Button
+                  variant="text"
+                  color="secondary"
+                  onClick={() => removeCartProduct(product)}
+                >
                   Remover
                 </Button>
               )}

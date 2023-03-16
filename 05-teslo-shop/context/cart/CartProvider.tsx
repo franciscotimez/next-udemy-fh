@@ -8,6 +8,7 @@ export interface CartState {
   cart: ICartProduct[];
   numberOfItems: number;
   subTotal: number;
+  taxRate: number;
   tax: number;
   total: number;
 }
@@ -16,6 +17,7 @@ const CART_INITIAL_STATE: CartState = {
   cart: [],
   numberOfItems: 0,
   subTotal: 0,
+  taxRate: 0,
   tax: 0,
   total: 0,
 };
@@ -66,6 +68,7 @@ export const CartProvider: React.FunctionComponent<Props> = ({ children }) => {
     const orderSummary = {
       numberOfItems,
       subTotal,
+      taxRate,
       tax: subTotal * taxRate,
       total: subTotal * (taxRate + 1),
     };
