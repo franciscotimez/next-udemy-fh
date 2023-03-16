@@ -5,7 +5,7 @@ export interface ICartProduct {
   image: string;
   inStock: number;
   price: number;
-  size: ISize;
+  size?: ISize;
   slug: string;
   title: string;
   gender: 'men' | 'women' | 'kid' | 'unisex';

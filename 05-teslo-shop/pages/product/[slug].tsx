@@ -1,9 +1,11 @@
-import type { GetServerSideProps, NextPage } from "next";
+import { useState } from "react";
+import type { NextPage, GetStaticPaths, GetStaticProps } from "next";
 import { Box, Button, Chip, Grid, Typography } from "@mui/material";
+
 import { ShopLayout } from "../../components/layouts";
 import { ProductSlideshow, SizeSelector } from "../../components/products";
 import { ItemCounter } from "../../components/ui";
-import { IProduct } from "../../interfaces/products";
+import { ICartProduct, IProduct, ISize } from "../../interfaces";
 import { dbProducts } from "../../database";
 
 interface Props {
@@ -11,6 +13,25 @@ interface Props {
 }
 
 const ProductPage: NextPage<Props> = ({ product }) => {
+  const [tempCartProduct, setTempCartProduct] = useState<ICartProduct>({
+    _id: product._id,
+    image: product.images[0],
+    inStock: product.inStock,
+    price: product.price,
+    size: undefined,
+    slug: product.slug,
+    title: product.title,
+    gender: product.gender,
+    quantity: 1,
+  });
+
+  const selectedSize = (size: ISize) => {
+    setTempCartProduct((currentProduct) => ({
+      ...currentProduct,
+      size,
+    }));
+  };
+
   return (
     <ShopLayout title={product.title} pageDescription={product.description}>
       <Grid container spacing={3}>
@@ -33,15 +54,18 @@ const ProductPage: NextPage<Props> = ({ product }) => {
               <Typography variant="subtitle2">Cantidad</Typography>
               <ItemCounter />
               <SizeSelector
-                // selectedSize={product.sizes[0]}
+                selectedSize={tempCartProduct.size}
                 sizes={product.sizes}
+                onSelectedSize={selectedSize}
               />
             </Box>
 
             {/* Agregar al carrito */}
             {product.inStock > 0 ? (
               <Button color="secondary" className="circular-btn">
-                Agregar al Carrito
+                {tempCartProduct.size
+                  ? "Agregar al Carrito"
+                  : "Seleccione un Talle"}
               </Button>
             ) : (
               <Chip
@@ -87,7 +111,6 @@ const ProductPage: NextPage<Props> = ({ product }) => {
 
 // * Esto se renderiza en tiempo de compilacion
 // You should use getStaticPaths if you’re statically pre-rendering pages that use dynamic routes
-import { GetStaticPaths } from "next";
 
 export const getStaticPaths: GetStaticPaths = async (ctx) => {
   const productSlugs = await dbProducts.getAllProductsSlugs();
@@ -105,7 +128,6 @@ export const getStaticPaths: GetStaticPaths = async (ctx) => {
 //- The data comes from a headless CMS.
 //- The data can be publicly cached (not user-specific).
 //- The page must be pre-rendered (for SEO) and be very fast — getStaticProps generates HTML and JSON files, both of which can be cached by a CDN for performance.
-import { GetStaticProps } from "next";
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const { slug = "" } = params as { slug: string };
