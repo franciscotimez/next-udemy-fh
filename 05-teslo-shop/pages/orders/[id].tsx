@@ -58,7 +58,7 @@ const OrderPage: NextPage = () => {
                 <Typography variant="subtitle1">
                   Dirección de entrega
                 </Typography>
-                <NextLink href="/checkout/address" passHref>
+                <NextLink href="/checkout/address" passHref legacyBehavior>
                   <Link underline="always">Editar</Link>
                 </NextLink>
               </Box>
@@ -72,7 +72,7 @@ const OrderPage: NextPage = () => {
               <Divider sx={{ my: 1 }} />
 
               <Box display="flex" justifyContent="end">
-                <NextLink href="/cart" passHref>
+                <NextLink href="/cart" passHref legacyBehavior>
                   <Link underline="always">Editar</Link>
                 </NextLink>
               </Box>

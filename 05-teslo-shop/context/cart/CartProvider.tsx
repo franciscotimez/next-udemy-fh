@@ -1,4 +1,4 @@
-import { useEffect, useReducer } from "react";
+import { useEffect, useReducer, useState } from "react";
 import Cookie from "js-cookie";
 
 import { ICartProduct } from "../../interfaces";
@@ -24,6 +24,7 @@ interface Props {
   children: React.ReactNode;
 }
 export const CartProvider: React.FunctionComponent<Props> = ({ children }) => {
+  const [mounted, setMounted] = useState(false);
   const [state, dispatch] = useReducer(cartReducer, CART_INITIAL_STATE);
 
   // Efecto
@@ -31,22 +32,29 @@ export const CartProvider: React.FunctionComponent<Props> = ({ children }) => {
     try {
       const cookieCart = Cookie.get("cart");
       const cookieProducts = cookieCart ? JSON.parse(cookieCart) : [];
+      console.log("try", { cookieCart });
+      console.log("try", { cookieProducts });
 
       dispatch({
         type: "[Cart] - LoadCart from cookies | storage",
         payload: cookieProducts,
       });
     } catch (error) {
+      console.log("error", error);
+
       dispatch({
         type: "[Cart] - LoadCart from cookies | storage",
         payload: [],
       });
     }
+    setMounted(true);
   }, []);
 
   useEffect(() => {
-    Cookie.set("cart", JSON.stringify(state.cart));
-  }, [state.cart]);
+    if (mounted) {
+      Cookie.set("cart", JSON.stringify(state.cart));
+    }
+  }, [state.cart, mounted]);
 
   useEffect(() => {
     const numberOfItems = state.cart.reduce(

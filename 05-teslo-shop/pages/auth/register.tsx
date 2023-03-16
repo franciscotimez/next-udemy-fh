@@ -41,7 +41,7 @@ const RegisterPage: NextPage = () => {
           </Grid>
 
           <Grid item xs={12} display="flex" justifyContent="end">
-            <NextLink href="/auth/login" passHref>
+            <NextLink href="/auth/login" passHref legacyBehavior>
               <Link underline="always">¿Ya tienes cuenta?</Link>
             </NextLink>
           </Grid>
