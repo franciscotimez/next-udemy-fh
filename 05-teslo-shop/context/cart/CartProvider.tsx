@@ -32,16 +32,12 @@ export const CartProvider: React.FunctionComponent<Props> = ({ children }) => {
     try {
       const cookieCart = Cookie.get("cart");
       const cookieProducts = cookieCart ? JSON.parse(cookieCart) : [];
-      console.log("try", { cookieCart });
-      console.log("try", { cookieProducts });
 
       dispatch({
         type: "[Cart] - LoadCart from cookies | storage",
         payload: cookieProducts,
       });
     } catch (error) {
-      console.log("error", error);
-
       dispatch({
         type: "[Cart] - LoadCart from cookies | storage",
         payload: [],
