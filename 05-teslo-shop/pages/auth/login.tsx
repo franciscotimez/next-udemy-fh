@@ -1,6 +1,7 @@
 import { useContext, useState } from "react";
 import type { NextPage } from "next";
 import NextLink from "next/link";
+import { useRouter } from "next/router";
 import {
   Box,
   Button,
@@ -16,8 +17,6 @@ import { useForm } from "react-hook-form";
 import { AuthContext } from "../../context";
 import { AuthLayout } from "../../components/layouts";
 import { validations } from "../../utils";
-import { tesloApi } from "../../api";
-import { useRouter } from "next/router";
 
 type FormData = {
   email: string;
@@ -46,7 +45,8 @@ const LoginPage: NextPage = () => {
       return;
     }
 
-    router.replace("/");
+    const destination = router.query.p?.toString() || "/";
+    router.replace(destination);
   };
 
   return (
@@ -109,7 +109,15 @@ const LoginPage: NextPage = () => {
             </Grid>
 
             <Grid item xs={12} display="flex" justifyContent="end">
-              <NextLink href="/auth/register" passHref legacyBehavior>
+              <NextLink
+                href={
+                  router.query.p
+                    ? `/auth/register?p=${router.query.p}`
+                    : "/auth/register"
+                }
+                passHref
+                legacyBehavior
+              >
                 <Link underline="always">¿No tienes cuenta?</Link>
               </NextLink>
             </Grid>
