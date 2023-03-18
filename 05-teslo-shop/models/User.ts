@@ -1,19 +1,19 @@
 import mongoose, { Schema, model, Model } from "mongoose";
 import { IUser } from "../interfaces";
 
-
 const userSchema = new Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   role: {
-    type: String, enum: {
-      value: ['admin', 'client'],
+    type: String,
+    enum: {
+      values: ['admin', 'client'],
       message: '{VALUE} no es un role valido',
-      default: 'client',
-      required: true
-    }
-  }
+    },
+    default: 'client',
+    require: true
+  },
 },
   { timestamps: true }
 );
