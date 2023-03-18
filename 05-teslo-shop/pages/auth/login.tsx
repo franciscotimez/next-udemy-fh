@@ -1,8 +1,19 @@
+import { useState } from "react";
 import type { NextPage } from "next";
 import NextLink from "next/link";
-import { Box, Button, Grid, Link, TextField, Typography } from "@mui/material";
-import { AuthLayout } from "../../components/layouts";
+import {
+  Box,
+  Button,
+  Chip,
+  Grid,
+  Link,
+  TextField,
+  Typography,
+} from "@mui/material";
+import { ErrorOutline } from "@mui/icons-material";
 import { useForm } from "react-hook-form";
+
+import { AuthLayout } from "../../components/layouts";
 import { validations } from "../../utils";
 import { tesloApi } from "../../api";
 
@@ -12,6 +23,8 @@ type FormData = {
 };
 
 const LoginPage: NextPage = () => {
+  const [showError, setShowError] = useState(false);
+
   const {
     register,
     handleSubmit,
@@ -19,6 +32,7 @@ const LoginPage: NextPage = () => {
   } = useForm<FormData>();
 
   const onLoginUser = async ({ email, password }: FormData) => {
+    setShowError(false);
     try {
       const { data } = await tesloApi.post("/user/login", { email, password });
       const { token, user } = data;
@@ -26,6 +40,11 @@ const LoginPage: NextPage = () => {
       console.log({ token, user });
     } catch (error) {
       console.log(error);
+      setShowError(true);
+
+      setTimeout(() => {
+        setShowError(false);
+      }, 3000);
     }
   };
 
@@ -38,6 +57,13 @@ const LoginPage: NextPage = () => {
               <Typography variant="h1" component="h1">
                 Iniciar Sesión
               </Typography>
+              <Chip
+                label="Error en email/password"
+                color="error"
+                icon={<ErrorOutline />}
+                className="fadeIn"
+                sx={{ display: showError ? "flex" : "none" }}
+              />
             </Grid>
 
             <Grid item xs={12}>
