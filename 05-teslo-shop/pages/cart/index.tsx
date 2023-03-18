@@ -1,3 +1,4 @@
+import React, { useContext, useEffect } from "react";
 import {
   Box,
   Button,
@@ -8,11 +9,26 @@ import {
   Typography,
 } from "@mui/material";
 import type { NextPage } from "next";
-import React from "react";
+
+import { CartContext } from "../../context";
 import { CartList, OrderSummary } from "../../components/cart";
 import { ShopLayout } from "../../components/layouts/ShopLayout";
+import { useRouter } from "next/router";
 
 const CartPage: NextPage = () => {
+  const { isLoaded, numberOfItems } = useContext(CartContext);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (isLoaded && numberOfItems === 0) {
+      router.replace("/cart/empty");
+    }
+  }, [isLoaded, numberOfItems, router]);
+
+  if (!isLoaded) {
+    return <></>;
+  }
+
   return (
     <ShopLayout
       title="Cart - 3"
