@@ -14,8 +14,12 @@ import {
 
 import { ShopLayout } from "../../components/layouts/ShopLayout";
 import { CartList, OrderSummary } from "../../components/cart";
+import { useContext } from "react";
+import { CartContext } from "../../context";
 
 const SummaryPage: NextPage = () => {
+  const { shippingAddress, numberOfItems } = useContext(CartContext);
+
   return (
     <ShopLayout title="Resumen de orden" pageDescription="Resumen de la orden">
       <Typography variant="h1" component="h1">
@@ -29,7 +33,10 @@ const SummaryPage: NextPage = () => {
         <Grid item xs={12} sm={5}>
           <Card className="summary-card">
             <CardContent>
-              <Typography variant="h2">Resumen (3 productos)</Typography>
+              <Typography variant="h2">
+                Resumen ({numberOfItems}{" "}
+                {numberOfItems === 1 ? "producto" : "productos"})
+              </Typography>
               <Divider sx={{ my: 1 }} />
 
               <Box display="flex" justifyContent="space-between">
@@ -41,11 +48,16 @@ const SummaryPage: NextPage = () => {
                 </NextLink>
               </Box>
 
-              <Typography>Fernando Herrera</Typography>
-              <Typography>323 Algun lugar</Typography>
-              <Typography>Stittsville, HYA 23S</Typography>
-              <Typography>Canadá</Typography>
-              <Typography>+1 23123123</Typography>
+              <Typography>
+                {shippingAddress?.firstname} {shippingAddress?.lastname}
+              </Typography>
+              <Typography>{shippingAddress?.address}</Typography>
+              <Typography>{shippingAddress?.address2}</Typography>
+              <Typography>
+                {shippingAddress?.city}, {shippingAddress?.zip},{" "}
+                {shippingAddress?.country}
+              </Typography>
+              <Typography>{shippingAddress?.phone}</Typography>
 
               <Divider sx={{ my: 1 }} />
 

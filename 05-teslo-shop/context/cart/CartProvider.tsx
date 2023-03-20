@@ -1,5 +1,5 @@
 import { useEffect, useReducer, useState } from "react";
-import Cookie from "js-cookie";
+import Cookies from "js-cookie";
 
 import { ICartProduct } from "../../interfaces";
 import { CartContext, cartReducer } from "./";
@@ -12,6 +12,18 @@ export interface CartState {
   taxRate: number;
   tax: number;
   total: number;
+  shippingAddress?: ShippingAddress;
+}
+
+export interface ShippingAddress {
+  firstname: string;
+  lastname: string;
+  address: string;
+  address2: string;
+  zip: string;
+  city: string;
+  country: string;
+  phone: string;
 }
 
 const CART_INITIAL_STATE: CartState = {
@@ -22,6 +34,7 @@ const CART_INITIAL_STATE: CartState = {
   taxRate: 0,
   tax: 0,
   total: 0,
+  shippingAddress: undefined,
 };
 
 interface Props {
@@ -34,7 +47,7 @@ export const CartProvider: React.FunctionComponent<Props> = ({ children }) => {
   // Efecto
   useEffect(() => {
     try {
-      const cookieCart = Cookie.get("cart");
+      const cookieCart = Cookies.get("cart");
       const cookieProducts = cookieCart ? JSON.parse(cookieCart) : [];
 
       dispatch({
@@ -51,8 +64,19 @@ export const CartProvider: React.FunctionComponent<Props> = ({ children }) => {
   }, []);
 
   useEffect(() => {
+    const addressCookie: ShippingAddress = JSON.parse(
+      Cookies.get("address") || "{}"
+    );
+
+    dispatch({
+      type: "[Cart] - Load Address from Cookies",
+      payload: addressCookie,
+    });
+  }, []);
+
+  useEffect(() => {
     if (mounted) {
-      Cookie.set("cart", JSON.stringify(state.cart));
+      Cookies.set("cart", JSON.stringify(state.cart));
     }
   }, [state.cart, mounted]);
 
@@ -127,6 +151,15 @@ export const CartProvider: React.FunctionComponent<Props> = ({ children }) => {
     dispatch({ type: "[Cart] - Remove product in cart", payload: product });
   };
 
+  const updateAddress = (address: ShippingAddress) => {
+    Cookies.set("address", JSON.stringify(address));
+
+    dispatch({
+      type: "[Cart] - Update Address",
+      payload: address,
+    });
+  };
+
   return (
     <CartContext.Provider
       value={{
@@ -136,6 +169,7 @@ export const CartProvider: React.FunctionComponent<Props> = ({ children }) => {
         addProductToCart,
         removeCartProduct,
         updateCartQuantity,
+        updateAddress,
       }}
     >
       {children}
