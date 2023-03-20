@@ -1,6 +1,6 @@
 import { useReducer, useEffect } from "react";
 import { useRouter } from "next/router";
-import { useSession } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 import Cookies from "js-cookie";
 import axios from "axios";
 
@@ -102,10 +102,11 @@ export const AuthProvider: React.FunctionComponent<Props> = ({ children }) => {
   };
 
   const logout = () => {
-    Cookies.remove("token");
+    // Cookies.remove("token");
     Cookies.remove("cart");
     Cookies.remove("address");
-    router.reload();
+    // router.reload();
+    signOut();
   };
 
   return (
