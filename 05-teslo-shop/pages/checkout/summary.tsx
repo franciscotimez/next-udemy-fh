@@ -14,11 +14,21 @@ import {
 
 import { ShopLayout } from "../../components/layouts/ShopLayout";
 import { CartList, OrderSummary } from "../../components/cart";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { CartContext } from "../../context";
+import Cookies from "js-cookie";
+import { useRouter } from "next/router";
 
 const SummaryPage: NextPage = () => {
   const { shippingAddress, numberOfItems } = useContext(CartContext);
+
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!Cookies.get("address")) {
+      router.push("/checkout/address");
+    }
+  }, [router]);
 
   return (
     <ShopLayout title="Resumen de orden" pageDescription="Resumen de la orden">
