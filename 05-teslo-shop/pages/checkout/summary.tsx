@@ -20,7 +20,8 @@ import Cookies from "js-cookie";
 import { useRouter } from "next/router";
 
 const SummaryPage: NextPage = () => {
-  const { shippingAddress, numberOfItems } = useContext(CartContext);
+  const { shippingAddress, numberOfItems, createOrder } =
+    useContext(CartContext);
 
   const router = useRouter();
 
@@ -29,6 +30,10 @@ const SummaryPage: NextPage = () => {
       router.push("/checkout/address");
     }
   }, [router]);
+
+  const onCreateOrder = () => {
+    createOrder();
+  };
 
   return (
     <ShopLayout title="Resumen de orden" pageDescription="Resumen de la orden">
@@ -80,7 +85,12 @@ const SummaryPage: NextPage = () => {
               <OrderSummary />
 
               <Box sx={{ mt: 3 }}>
-                <Button color="secondary" className="circular-btn" fullWidth>
+                <Button
+                  color="secondary"
+                  className="circular-btn"
+                  fullWidth
+                  onClick={onCreateOrder}
+                >
                   Confirmar Orden
                 </Button>
               </Box>
