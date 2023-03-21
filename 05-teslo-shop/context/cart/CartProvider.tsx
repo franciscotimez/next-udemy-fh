@@ -5,6 +5,7 @@ import { ICartProduct, ShippingAddress } from "../../interfaces";
 import { CartContext, cartReducer } from "./";
 import tesloApi from "../../api/tesloApi";
 import { IOrder } from "../../interfaces/order";
+import axios from "axios";
 
 export interface CartState {
   isLoaded: boolean;
@@ -151,7 +152,10 @@ export const CartProvider: React.FunctionComponent<Props> = ({ children }) => {
     });
   };
 
-  const createOrder = async () => {
+  const createOrder = async (): Promise<{
+    hasError: boolean;
+    message: string;
+  }> => {
     if (!state.shippingAddress) throw new Error("No hay direccion de entrega");
 
     const body: IOrder = {
@@ -167,8 +171,23 @@ export const CartProvider: React.FunctionComponent<Props> = ({ children }) => {
     try {
       const { data } = await tesloApi.post("/orders", body);
       console.log({ data });
+
+      return {
+        hasError: false,
+        message: data._id!,
+      };
     } catch (error) {
       console.log(error);
+      if (axios.isAxiosError(error)) {
+        return {
+          hasError: true,
+          message: error.response?.data.message,
+        };
+      }
+      return {
+        hasError: true,
+        message: "Error no controlado, hable con el admin.",
+      };
     }
   };
 

@@ -52,7 +52,6 @@ const createOrder = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     }
 
     // Hasta ahora bien
-    console.log({ session });
     const userId = session.user._id;
     const newOrder = new Order({
       ...req.body,
