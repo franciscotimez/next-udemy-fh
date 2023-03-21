@@ -2,26 +2,21 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { jwt } from './utils';
+import { getToken } from 'next-auth/jwt';
 
 // This function can be marked `async` if using `await` inside
-export async function  middleware(req: NextRequest) {
-  let token = req.cookies.get('token')?.value || '';
+export async function middleware(req: NextRequest) {
 
-  console.log({ pathname: req.nextUrl.pathname });
-  let isValidToken = false;
+  const session = await getToken({ req, secret: process.env.NEXTAUTH_URL });
 
-  try {
-    // ! No se puede implementar la validacion del token como middleware
-    // jwt.isValidToken(token);
-    isValidToken = true;
-  } catch (error) {
-    isValidToken = false;
+  if (!session) {
+    const requestedPage = req.nextUrl.pathname;
+    const url = req.nextUrl.clone();
+    url.pathname = '/auth/login';
+    url.search = `p=${requestedPage}`;
+    return NextResponse.redirect(url);
   }
-
-  if (!isValidToken) {
-    return NextResponse.redirect(`/auth/login?p=${req.nextUrl.pathname}`);
-  }
-  NextResponse.next()
+  return NextResponse.next();
 }
 
 // See "Matching Paths" below to learn more
