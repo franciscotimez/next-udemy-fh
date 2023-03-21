@@ -1,3 +1,4 @@
+import { ISize } from "./products";
 import { IUser } from "./user";
 
 export interface IOrder {
@@ -11,7 +12,7 @@ export interface IOrder {
   tax: number;
   total: number;
   isPaid: boolean;
-  paidAt: string;
+  paidAt?: string;
   // cosas de mongo
   createdAt?: string;
   updatedAt?: string;
@@ -20,11 +21,12 @@ export interface IOrder {
 export interface IOrderItem {
   _id: string;
   title: string;
-  size: string;
+  size: ISize;
   quantity: number;
   slug: string;
   image: string;
   price: number;
+  gender: string;
 }
 
 export interface ShippingAddress {
