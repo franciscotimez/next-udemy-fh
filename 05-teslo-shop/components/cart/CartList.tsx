@@ -13,13 +13,16 @@ import { ItemCounter } from "../ui";
 import { CartContext } from "../../context/cart/CartContext";
 import { ICartProduct } from "../../interfaces/cart";
 import { currency } from "../../utils";
+import { IOrderItem } from "../../interfaces/order";
 
 interface Props {
   editable?: boolean;
+  products?: IOrderItem[];
 }
 
 export const CartList: React.FunctionComponent<Props> = ({
   editable = false,
+  products,
 }) => {
   const { cart, updateCartQuantity, removeCartProduct } =
     useContext(CartContext);
@@ -29,9 +32,11 @@ export const CartList: React.FunctionComponent<Props> = ({
     updateCartQuantity(product);
   };
 
+  const productsToShow = products ? products : cart;
+
   return (
     <>
-      {cart.map((product) => {
+      {productsToShow.map((product) => {
         return (
           <Grid
             container
@@ -68,9 +73,9 @@ export const CartList: React.FunctionComponent<Props> = ({
                 {editable ? (
                   <ItemCounter
                     currentValue={product.quantity}
-                    maxValue={product.inStock}
+                    maxValue={(product as ICartProduct).inStock}
                     onUpdateValue={(newValue) =>
-                      onUpdateCartQuantity(product, newValue)
+                      onUpdateCartQuantity(product as ICartProduct, newValue)
                     }
                   />
                 ) : (
@@ -88,12 +93,14 @@ export const CartList: React.FunctionComponent<Props> = ({
               alignItems="center"
               flexDirection="column"
             >
-              <Typography variant="subtitle1">{currency.format(product.price)}</Typography>
+              <Typography variant="subtitle1">
+                {currency.format(product.price)}
+              </Typography>
               {editable && (
                 <Button
                   variant="text"
                   color="secondary"
-                  onClick={() => removeCartProduct(product)}
+                  onClick={() => removeCartProduct(product as ICartProduct)}
                 >
                   Remover
                 </Button>

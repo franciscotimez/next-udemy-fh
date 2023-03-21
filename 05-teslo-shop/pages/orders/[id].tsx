@@ -28,6 +28,7 @@ interface Props {
 }
 
 const OrderPage: NextPage<Props> = ({ order }) => {
+  const { shippingAddress } = order;
   return (
     <ShopLayout
       title="Resumen de la orden 123671523"
@@ -36,25 +37,27 @@ const OrderPage: NextPage<Props> = ({ order }) => {
       <Typography variant="h1" component="h1">
         Orden: {order._id}
       </Typography>
-
-      {/* <Chip 
-            sx={{ my: 2 }}
-            label="Pendiente de pago"
-            variant='outlined'
-            color="error"
-            icon={ <CreditCardOffOutlined /> }
-        /> */}
-      <Chip
-        sx={{ my: 2 }}
-        label="Orden ya fue pagada"
-        variant="outlined"
-        color="success"
-        icon={<CreditScoreOutlined />}
-      />
+      {order.isPaid ? (
+        <Chip
+          sx={{ my: 2 }}
+          label="Orden ya fue pagada"
+          variant="outlined"
+          color="success"
+          icon={<CreditScoreOutlined />}
+        />
+      ) : (
+        <Chip
+          sx={{ my: 2 }}
+          label="Pendiente de pago"
+          variant="outlined"
+          color="error"
+          icon={<CreditCardOffOutlined />}
+        />
+      )}
 
       <Grid container>
         <Grid item xs={12} sm={7}>
-          <CartList />
+          <CartList products={order.orderItems} />
         </Grid>
         <Grid item xs={12} sm={5}>
           <Card className="summary-card">
@@ -69,38 +72,44 @@ const OrderPage: NextPage<Props> = ({ order }) => {
                 <Typography variant="subtitle1">
                   Dirección de entrega
                 </Typography>
-                <NextLink href="/checkout/address" passHref legacyBehavior>
-                  <Link underline="always">Editar</Link>
-                </NextLink>
               </Box>
 
-              <Typography>Fernando Herrera</Typography>
-              <Typography>323 Algun lugar</Typography>
-              <Typography>Stittsville, HYA 23S</Typography>
-              <Typography>Canadá</Typography>
-              <Typography>+1 23123123</Typography>
+              <Typography>
+                {shippingAddress?.firstname} {shippingAddress?.lastname}
+              </Typography>
+              <Typography>{shippingAddress?.address}</Typography>
+              <Typography>{shippingAddress?.address2}</Typography>
+              <Typography>
+                {shippingAddress?.city}, {shippingAddress?.zip},{" "}
+                {shippingAddress?.country}
+              </Typography>
+              <Typography>{shippingAddress?.phone}</Typography>
 
               <Divider sx={{ my: 1 }} />
 
-              <Box display="flex" justifyContent="end">
-                <NextLink href="/cart" passHref legacyBehavior>
-                  <Link underline="always">Editar</Link>
-                </NextLink>
-              </Box>
+              <OrderSummary
+                orderValues={{
+                  subTotal: order.subtotal,
+                  numberOfItems: order.numberOfItems,
+                  tax: order.tax,
+                  total: order.total,
+                  taxRate: Number(process.env.NEXT_PUBLIC_TAX_RATE),
+                }}
+              />
 
-              <OrderSummary />
-
-              <Box sx={{ mt: 3 }}>
+              <Box sx={{ mt: 3 }} display="flex" flexDirection="column">
                 {/* TODO */}
-                <h1>Pagar</h1>
-
-                <Chip
-                  sx={{ my: 2 }}
-                  label="Orden ya fue pagada"
-                  variant="outlined"
-                  color="success"
-                  icon={<CreditScoreOutlined />}
-                />
+                {order.isPaid ? (
+                  <Chip
+                    sx={{ my: 2 }}
+                    label="Orden ya fue pagada"
+                    variant="outlined"
+                    color="success"
+                    icon={<CreditScoreOutlined />}
+                  />
+                ) : (
+                  <h1>Pagar</h1>
+                )}
               </Box>
             </CardContent>
           </Card>

@@ -3,9 +3,23 @@ import React, { useContext } from "react";
 import { CartContext } from "../../context/cart/CartContext";
 import { currency } from "../../utils";
 
-export const OrderSummary = () => {
-  const { subTotal, numberOfItems, tax, total, taxRate } =
-    useContext(CartContext);
+interface Props {
+  orderValues?: {
+    subTotal: number;
+    numberOfItems: number;
+    tax: number;
+    total: number;
+    taxRate: number;
+  };
+}
+
+export const OrderSummary: React.FunctionComponent<Props> = ({
+  orderValues,
+}) => {
+  const cart = useContext(CartContext);
+  const summaryValues = orderValues ? orderValues : cart;
+
+  const { subTotal, numberOfItems, tax, total, taxRate } = summaryValues;
 
   return (
     <Grid container>
