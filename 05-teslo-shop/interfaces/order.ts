@@ -13,6 +13,7 @@ export interface IOrder {
   total: number;
   isPaid: boolean;
   paidAt?: string;
+  transactionId?: string,
   // cosas de mongo
   createdAt?: string;
   updatedAt?: string;
