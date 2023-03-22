@@ -1,3 +1,4 @@
+export * as IPaypal from './paypal'
 export * from './cart'
 export * from './order'
 export * from './products'

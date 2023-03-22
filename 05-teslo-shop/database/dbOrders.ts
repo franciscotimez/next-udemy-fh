@@ -27,3 +27,22 @@ export const getOrdersByUserId = async (user: string): Promise<IOrder[]> => {
 
   return JSON.parse(JSON.stringify(orders));
 };
+
+export const setOrderPaided = async (id: string, transactionId: string): Promise<IOrder | null> => {
+
+  if (!isValidObjectId(id)) return null;
+
+  await db.connect();
+  const order = await Order.findById(id);
+  if (order) {
+    order.isPaid = true;
+    order.paidAt = new Date().getDate().toString();
+    order.transactionId = transactionId;
+    order.save();
+  }
+  await db.disconnect();
+
+  if (!order) return null;
+
+  return JSON.parse(JSON.stringify(order));
+};
