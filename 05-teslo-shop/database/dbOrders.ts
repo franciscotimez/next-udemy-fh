@@ -30,6 +30,8 @@ export const getOrdersByUserId = async (user: string): Promise<IOrder[]> => {
 
 export const setOrderPaided = async (id: string, transactionId: string): Promise<IOrder | null> => {
 
+  console.log({ id }, { transactionId });
+
   if (!isValidObjectId(id)) return null;
 
   await db.connect();
@@ -38,11 +40,13 @@ export const setOrderPaided = async (id: string, transactionId: string): Promise
     order.isPaid = true;
     order.paidAt = new Date().getDate().toString();
     order.transactionId = transactionId;
-    order.save();
+    await order.save();
   }
   await db.disconnect();
 
   if (!order) return null;
+
+  console.log({ order });
 
   return JSON.parse(JSON.stringify(order));
 };

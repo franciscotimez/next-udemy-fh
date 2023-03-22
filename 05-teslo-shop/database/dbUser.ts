@@ -14,7 +14,7 @@ export const checkUserEmailPassword = async (email: string, password: string) =>
   if (!bcrypt.compareSync(password, user.password!)) return null;
 
   const { _id, name, role } = user;
-  return { _id, email, name, role };
+  return { id:_id, _id, email, name, role };
 };
 
 export const oAuthToDatabaseUser = async (oAuthEmail: string, oAuthName: string) => {

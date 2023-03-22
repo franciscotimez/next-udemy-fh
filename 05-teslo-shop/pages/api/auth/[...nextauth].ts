@@ -8,8 +8,8 @@ export default NextAuth({
     Credentials({
       name: "Custom Login",
       credentials: {
-        email: { label: "Correo:", type: 'email', placeholder: "example@google.com" },
-        password: { label: "Contraseña:", type: 'password', placeholder: "password" },
+        email: { label: "Correo:", type: "email", placeholder: "example@google.com" },
+        password: { label: "Contraseña:", type: "password", placeholder: "password" },
       },
       async authorize(credentials) {
         const user = await dbUsers.checkUserEmailPassword(credentials!.email, credentials!.password);
@@ -72,7 +72,8 @@ export default NextAuth({
     },
     async session({ token, session, user }) {
 
-      session.accessToken = token.accessToken;
+      // console.log("Session!!!!");
+      // session.accessToken = token.accessToken;
       session.user = token.user as any;
 
       return session;
