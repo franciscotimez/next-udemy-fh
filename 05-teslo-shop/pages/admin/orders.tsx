@@ -1,15 +1,12 @@
-import {
-  ConfirmationNumberOutlined,
-  PeopleOutlined,
-} from "@mui/icons-material";
-import { Chip, Grid, MenuItem, Select, Typography } from "@mui/material";
 import type { NextPage } from "next";
-import { useEffect, useState } from "react";
-import useSWR from "swr";
-import { AdminLayout } from "../../components/layouts";
-import { IOrder, IUser } from "../../interfaces";
+import { Chip, Grid, Typography } from "@mui/material";
+import { ConfirmationNumberOutlined } from "@mui/icons-material";
 import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
-import { tesloApi } from "../../api";
+import useSWR from "swr";
+
+import { IOrder, IUser } from "../../interfaces";
+import { AdminLayout } from "../../components/layouts";
+import { currency } from "../../utils";
 
 const columns: GridColDef[] = [
   { field: "id", headerName: "Order ID", width: 250 },
@@ -43,7 +40,7 @@ const columns: GridColDef[] = [
 ];
 
 const OrdersPage: NextPage = () => {
-  const { data, error, mutate } = useSWR<IOrder[]>("/api/admin/orders");
+  const { data, error } = useSWR<IOrder[]>("/api/admin/orders");
 
   if (!error && !data) {
     return <></>;
@@ -53,23 +50,11 @@ const OrdersPage: NextPage = () => {
     return <Typography>Error al cargar la informacion</Typography>;
   }
 
-  const onRoleUpdated = async (userId: string, newRole: string) => {
-    try {
-      await tesloApi.put("/admin/users", {
-        userId,
-        role: newRole,
-      });
-      mutate();
-    } catch (error) {
-      console.log({ error });
-    }
-  };
-
   const rows = data!.map((order) => ({
     id: order._id,
     email: (order.user as IUser).email,
     name: (order.user as IUser).name,
-    total: order.total,
+    total: currency.format(order.total),
     isPaid: order.isPaid,
     numberOfItems: order.numberOfItems,
     check: order,
