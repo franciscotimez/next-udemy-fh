@@ -17,7 +17,7 @@ import {
 } from "@mui/icons-material";
 
 import { IOrder } from "../../../interfaces";
-import { AdminLayout, ShopLayout } from "../../../components/layouts";
+import { AdminLayout } from "../../../components/layouts";
 import { CartList, OrderSummary } from "../../../components/cart";
 import { dbOrders } from "../../../database";
 
