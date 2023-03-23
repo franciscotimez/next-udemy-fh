@@ -168,7 +168,7 @@ export const SideMenu = () => {
               </ListItemButton>
 
               <ListItemButton
-                onClick={() => navigateTo(`/auth/login?p=${router.asPath}`)}
+                onClick={() => navigateTo(`/admin/users`)}
               >
                 <ListItemIcon>
                   <AdminPanelSettings />
