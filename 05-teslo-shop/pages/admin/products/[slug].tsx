@@ -29,17 +29,43 @@ import {
   RadioGroup,
   TextField,
 } from "@mui/material";
+import { useForm } from "react-hook-form";
 
 const validTypes = ["shirts", "pants", "hoodies", "hats"];
 const validGender = ["men", "women", "kid", "unisex"];
 const validSizes = ["XS", "S", "M", "L", "XL", "XXL", "XXXL"];
 
+interface FormData {
+  _id?: string;
+  description: string;
+  images: string[];
+  inStock: number;
+  price: number;
+  sizes: string[];
+  slug: string;
+  tags: string[];
+  title: string;
+  type: string;
+  gender: string;
+}
 interface Props {
   product: IProduct;
 }
 
 const ProductAdminPage: NextPage<Props> = ({ product }) => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormData>({
+    defaultValues: product,
+  });
+
   const onDeleteTag = (tag: string) => {};
+
+  const onSubmit = (form: FormData) => {
+    console.log({ form });
+  };
 
   return (
     <AdminLayout
@@ -47,7 +73,7 @@ const ProductAdminPage: NextPage<Props> = ({ product }) => {
       subTitle={`Editando: ${product.title}`}
       icon={<DriveFileRenameOutline />}
     >
-      <form>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <Box display="flex" justifyContent="end" sx={{ mb: 1 }}>
           <Button
             color="secondary"
@@ -67,12 +93,12 @@ const ProductAdminPage: NextPage<Props> = ({ product }) => {
               variant="filled"
               fullWidth
               sx={{ mb: 1 }}
-              // { ...register('name', {
-              //     required: 'Este campo es requerido',
-              //     minLength: { value: 2, message: 'Mínimo 2 caracteres' }
-              // })}
-              // error={ !!errors.name }
-              // helperText={ errors.name?.message }
+              {...register("title", {
+                required: "Este campo es requerido",
+                minLength: { value: 2, message: "Mínimo 2 caracteres" },
+              })}
+              error={!!errors.title}
+              helperText={errors.title?.message}
             />
 
             <TextField
@@ -81,6 +107,12 @@ const ProductAdminPage: NextPage<Props> = ({ product }) => {
               fullWidth
               multiline
               sx={{ mb: 1 }}
+              {...register("description", {
+                required: "Este campo es requerido",
+                minLength: { value: 2, message: "Mínimo 2 caracteres" },
+              })}
+              error={!!errors.description}
+              helperText={errors.description?.message}
             />
 
             <TextField
@@ -89,6 +121,12 @@ const ProductAdminPage: NextPage<Props> = ({ product }) => {
               variant="filled"
               fullWidth
               sx={{ mb: 1 }}
+              {...register("inStock", {
+                required: "Este campo es requerido",
+                min: { value: 0, message: "Minimo de valor 0" },
+              })}
+              error={!!errors.inStock}
+              helperText={errors.inStock?.message}
             />
 
             <TextField
@@ -97,6 +135,12 @@ const ProductAdminPage: NextPage<Props> = ({ product }) => {
               variant="filled"
               fullWidth
               sx={{ mb: 1 }}
+              {...register("price", {
+                required: "Este campo es requerido",
+                min: { value: 0, message: "Precio minimo 0" },
+              })}
+              error={!!errors.price}
+              helperText={errors.price?.message}
             />
 
             <Divider sx={{ my: 1 }} />
@@ -156,6 +200,15 @@ const ProductAdminPage: NextPage<Props> = ({ product }) => {
               variant="filled"
               fullWidth
               sx={{ mb: 1 }}
+              {...register("slug", {
+                required: "Este campo es requerido",
+                validate: (val) =>
+                  val.trim().includes(" ")
+                    ? "No puede tener espacios en blanco"
+                    : undefined,
+              })}
+              error={!!errors.slug}
+              helperText={errors.slug?.message}
             />
 
             <TextField
