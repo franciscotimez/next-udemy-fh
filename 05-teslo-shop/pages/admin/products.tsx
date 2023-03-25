@@ -1,5 +1,5 @@
 import type { NextPage } from "next";
-import { CardMedia, Grid, Typography } from "@mui/material";
+import { CardMedia, Grid, Link, Typography } from "@mui/material";
 import { CategoryOutlined } from "@mui/icons-material";
 import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import useSWR from "swr";
@@ -7,6 +7,7 @@ import useSWR from "swr";
 import { AdminLayout } from "../../components/layouts";
 import { currency } from "../../utils";
 import { IProduct } from "../../interfaces";
+import NextLink from "next/link";
 
 const columns: GridColDef[] = [
   {
@@ -25,7 +26,18 @@ const columns: GridColDef[] = [
       );
     },
   },
-  { field: "title", headerName: "Title", width: 250 },
+  {
+    field: "title",
+    headerName: "Title",
+    width: 250,
+    renderCell({ row }: GridRenderCellParams) {
+      return (
+        <NextLink href={`/admin/products/${row.slug}`} passHref legacyBehavior>
+          <Link underline="always">{row.title}</Link>
+        </NextLink>
+      );
+    },
+  },
   { field: "gender", headerName: "Genero" },
   { field: "type", headerName: "Tipo" },
   { field: "inStock", headerName: "Inventario" },
