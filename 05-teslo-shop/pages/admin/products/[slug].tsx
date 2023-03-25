@@ -30,6 +30,7 @@ import {
   TextField,
 } from "@mui/material";
 import { useForm } from "react-hook-form";
+import tesloApi from "../../../api/tesloApi";
 
 const validTypes = ["shirts", "pants", "hoodies", "hats"];
 const validGender = ["men", "women", "kid", "unisex"];
@@ -54,7 +55,7 @@ interface Props {
 
 const ProductAdminPage: NextPage<Props> = ({ product }) => {
   const [newTagValue, setNewTagValue] = useState("");
-
+  const [isSaving, setIsSaving] = useState(false);
   const {
     register,
     handleSubmit,
@@ -114,8 +115,27 @@ const ProductAdminPage: NextPage<Props> = ({ product }) => {
     setValue("tags", currentTags, { shouldValidate: true });
   };
 
-  const onSubmit = (form: FormData) => {
+  const onSubmit = async (form: FormData) => {
     console.log({ form });
+    if (form.images.length < 2) return alert("Minimo 2 imagenes");
+    setIsSaving(true);
+
+    try {
+      const { data } = await tesloApi({
+        url: "/admin/products",
+        method: "PUT",
+        data: form,
+      });
+      console.log({ data });
+      if (!form._id) {
+        // todo: recargar el navegador
+      } else {
+        setIsSaving(false);
+      }
+    } catch (error) {
+      console.log({ error });
+      setIsSaving(false);
+    }
   };
 
   return (
@@ -131,6 +151,7 @@ const ProductAdminPage: NextPage<Props> = ({ product }) => {
             startIcon={<SaveOutlined />}
             sx={{ width: "150px" }}
             type="submit"
+            disabled={isSaving}
           >
             Guardar
           </Button>
