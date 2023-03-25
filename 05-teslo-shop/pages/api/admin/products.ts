@@ -37,6 +37,7 @@ const getProducts = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     .lean();
   await db.disconnect();
 
+  // Arreglo Url de images
   const updatedProducts = products.map(product => {
     product.images = product.images.map(image => {
       return image.includes('http') ? image : `${process.env.NEXTAUTH_URL}/products/${image}`;
