@@ -131,12 +131,20 @@ const ProductAdminPage: NextPage<Props> = ({ product }) => {
           "/admin/upload",
           formData
         );
-        console.log({ data });
+        setValue("images", [...getValues("images"), data.message], {
+          shouldValidate: true,
+        });
       }
     } catch (error) {
       console.log({ error });
     }
   };
+
+  const onDeleteImage = (image: string) => {
+    const currentImages = getValues("images").filter((img) => img !== image);
+    setValue("images", currentImages, { shouldValidate: true });
+  };
+
   const onSubmit = async (form: FormData) => {
     console.log({ form });
     if (form.images.length < 2) return alert("Minimo 2 imagenes");
@@ -375,20 +383,27 @@ const ProductAdminPage: NextPage<Props> = ({ product }) => {
                 label="Es necesario al 2 imagenes"
                 color="error"
                 variant="outlined"
+                sx={{
+                  display: getValues("images").length >= 2 ? "none" : "flex",
+                }}
               />
 
               <Grid container spacing={2}>
-                {product.images.map((img) => (
+                {getValues("images").map((img) => (
                   <Grid item xs={4} sm={3} key={img}>
                     <Card>
                       <CardMedia
                         component="img"
                         className="fadeIn"
-                        image={`/products/${img}`}
+                        image={img}
                         alt={img}
                       />
                       <CardActions>
-                        <Button fullWidth color="error">
+                        <Button
+                          fullWidth
+                          color="error"
+                          onClick={() => onDeleteImage(img)}
+                        >
                           Borrar
                         </Button>
                       </CardActions>

@@ -20,14 +20,12 @@ export const ProductSlideshow: React.FunctionComponent<Props> = ({
   return (
     <Slide easing="ease" duration={7000} indicators>
       {images.map((image) => {
-        const url = `/products/${image}`;
-
         return (
           <div key={image}>
             <div
               style={{
                 ...divStyle,
-                backgroundImage: `url(${url})`,
+                backgroundImage: `url(${image})`,
               }}
             />
           </div>

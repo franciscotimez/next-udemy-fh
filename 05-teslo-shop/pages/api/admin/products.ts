@@ -3,6 +3,9 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { db } from '../../../database';
 import { IProduct } from '../../../interfaces';
 import { Product } from '../../../models';
+import { v2 as cloudinary } from 'cloudinary';
+
+cloudinary.config(process.env.CLOUDINARY_URL || '');
 
 type Data =
   | { message: string; }
@@ -34,7 +37,14 @@ const getProducts = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     .lean();
   await db.disconnect();
 
-  return res.status(200).json(products);
+  const updatedProducts = products.map(product => {
+    product.images = product.images.map(image => {
+      return image.includes('http') ? image : `${process.env.NEXTAUTH_URL}/products/${image}`;
+    });
+    return product;
+  });
+
+  return res.status(200).json(updatedProducts);
 };
 
 const updateProduct = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
@@ -56,7 +66,13 @@ const updateProduct = async (req: NextApiRequest, res: NextApiResponse<Data>) =>
       return res.status(400).json({ message: 'Id de producto no es valido.' });
     }
 
-    // todo: Eliminar la imagen de la CDN
+    // Eliminar la imagen de la CDN
+    product.images.forEach(async (image) => {
+      if (!images.includes(image)) {
+        const fileName = image.substring(image.lastIndexOf('/') + 1).split('.')[0];
+        await cloudinary.uploader.destroy(fileName);
+      }
+    });
 
     await product.updateOne(req.body, { new: true });
 
