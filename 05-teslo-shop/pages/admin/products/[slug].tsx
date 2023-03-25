@@ -63,6 +63,21 @@ const ProductAdminPage: NextPage<Props> = ({ product }) => {
     defaultValues: product,
   });
 
+  const onChangeSize = (size: string) => {
+    let currentSizes = getValues("sizes");
+
+    if (currentSizes.includes(size)) {
+      currentSizes = currentSizes.filter((current) => size !== current);
+    } else {
+      currentSizes.push(size);
+      // mantengo el orden del array de sizes
+      currentSizes = validSizes.filter((validSize) =>
+        currentSizes.includes(validSize)
+      );
+    }
+    setValue("sizes", currentSizes, { shouldValidate: true });
+  };
+
   const onDeleteTag = (tag: string) => {};
 
   const onSubmit = (form: FormData) => {
@@ -192,8 +207,11 @@ const ProductAdminPage: NextPage<Props> = ({ product }) => {
               {validSizes.map((size) => (
                 <FormControlLabel
                   key={size}
-                  control={<Checkbox />}
+                  control={
+                    <Checkbox checked={getValues("sizes").includes(size)} />
+                  }
                   label={size}
+                  onChange={() => onChangeSize(size)}
                 />
               ))}
             </FormGroup>
