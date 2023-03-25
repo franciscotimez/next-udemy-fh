@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { GetServerSideProps, NextPage } from "next";
 import { AdminLayout } from "../../../components/layouts";
 import { IProduct } from "../../../interfaces";
@@ -53,6 +53,8 @@ interface Props {
 }
 
 const ProductAdminPage: NextPage<Props> = ({ product }) => {
+  const [newTagValue, setNewTagValue] = useState("");
+
   const {
     register,
     handleSubmit,
@@ -97,7 +99,20 @@ const ProductAdminPage: NextPage<Props> = ({ product }) => {
     setValue("sizes", currentSizes, { shouldValidate: true });
   };
 
-  const onDeleteTag = (tag: string) => {};
+  const onNewTag = () => {
+    const newTag = newTagValue.trim().toLowerCase();
+    setNewTagValue("");
+    const currentTags = getValues("tags");
+
+    if (currentTags.includes(newTag)) return;
+    currentTags.push(newTag);
+  };
+  const onDeleteTag = (tag: string) => {
+    const currentTags = getValues("tags").filter(
+      (currentTag) => currentTag !== tag
+    );
+    setValue("tags", currentTags, { shouldValidate: true });
+  };
 
   const onSubmit = (form: FormData) => {
     console.log({ form });
@@ -260,6 +275,11 @@ const ProductAdminPage: NextPage<Props> = ({ product }) => {
               fullWidth
               sx={{ mb: 1 }}
               helperText="Presiona [spacebar] para agregar"
+              value={newTagValue}
+              onChange={({ target }) => setNewTagValue(target.value)}
+              onKeyUp={({ code }) =>
+                code === "Space" ? onNewTag() : undefined
+              }
             />
 
             <Box
@@ -272,7 +292,7 @@ const ProductAdminPage: NextPage<Props> = ({ product }) => {
               }}
               component="ul"
             >
-              {product.tags.map((tag) => {
+              {getValues("tags").map((tag) => {
                 return (
                   <Chip
                     key={tag}
