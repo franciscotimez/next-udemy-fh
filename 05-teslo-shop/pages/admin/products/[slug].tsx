@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { GetServerSideProps, NextPage } from "next";
 import {
   DriveFileRenameOutline,
@@ -55,8 +55,10 @@ interface Props {
 
 const ProductAdminPage: NextPage<Props> = ({ product }) => {
   const router = useRouter();
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [newTagValue, setNewTagValue] = useState("");
   const [isSaving, setIsSaving] = useState(false);
+
   const {
     register,
     handleSubmit,
@@ -116,6 +118,25 @@ const ProductAdminPage: NextPage<Props> = ({ product }) => {
     setValue("tags", currentTags, { shouldValidate: true });
   };
 
+  const onFileSelected = async ({
+    target,
+  }: React.ChangeEvent<HTMLInputElement>) => {
+    if (!target.files || target.files.length === 0) return;
+
+    try {
+      for (const file of target.files) {
+        const formData = new FormData();
+        formData.append("file", file);
+        const { data } = await tesloApi.post<{ message: string }>(
+          "/admin/upload",
+          formData
+        );
+        console.log({ data });
+      }
+    } catch (error) {
+      console.log({ error });
+    }
+  };
   const onSubmit = async (form: FormData) => {
     console.log({ form });
     if (form.images.length < 2) return alert("Minimo 2 imagenes");
@@ -337,9 +358,18 @@ const ProductAdminPage: NextPage<Props> = ({ product }) => {
                 fullWidth
                 startIcon={<UploadOutlined />}
                 sx={{ mb: 3 }}
+                onClick={() => fileInputRef.current?.click()}
               >
                 Cargar imagen
               </Button>
+              <input
+                ref={fileInputRef}
+                type="file"
+                multiple
+                accept="image/png, image/gif, image/jpeg"
+                style={{ display: "none" }}
+                onChange={onFileSelected}
+              />
 
               <Chip
                 label="Es necesario al 2 imagenes"
