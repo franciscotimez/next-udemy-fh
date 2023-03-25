@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { GetServerSideProps, NextPage } from "next";
 import { AdminLayout } from "../../../components/layouts";
 import { IProduct } from "../../../interfaces";
@@ -59,9 +59,28 @@ const ProductAdminPage: NextPage<Props> = ({ product }) => {
     formState: { errors },
     getValues,
     setValue,
+    watch,
   } = useForm<FormData>({
     defaultValues: product,
   });
+
+  useEffect(() => {
+    const { unsubscribe } = watch((value, { name, type }) => {
+      // console.log({ value, name, type });
+      if (name === "title") {
+        const newSlug =
+          value.title
+            ?.trim()
+            .replaceAll(" ", "_")
+            .replaceAll("'", "")
+            .toLowerCase() || "";
+
+        setValue("slug", newSlug);
+      }
+    });
+
+    return () => unsubscribe();
+  }, [watch, setValue]);
 
   const onChangeSize = (size: string) => {
     let currentSizes = getValues("sizes");
