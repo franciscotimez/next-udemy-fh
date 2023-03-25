@@ -1,7 +1,6 @@
 import { PeopleOutlined } from "@mui/icons-material";
 import { Grid, MenuItem, Select, Typography } from "@mui/material";
 import type { NextPage } from "next";
-import { useEffect, useState } from "react";
 import useSWR from "swr";
 import { AdminLayout } from "../../components/layouts";
 import { IUser } from "../../interfaces";
