@@ -18,8 +18,8 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
     case 'PUT':
       return updateProduct(req, res);
 
-    // case 'POST':
-    //   return updateUser(req, res);
+    case 'POST':
+      return createProduct(req, res);
 
     default:
       return res.status(400).json({ message: 'Bad Request' });
@@ -71,11 +71,31 @@ const updateProduct = async (req: NextApiRequest, res: NextApiResponse<Data>) =>
   }
 };
 
-// const updateProduct = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
+const createProduct = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 
-//   await db.connect();
-//   const orders = await Order.find().sort({ updatedAt: 'desc' }).populate('user', 'name email').lean();
-//   await db.disconnect();
+  const { images = [] } = req.body as IProduct;
 
-//   return res.status(200).json(orders);
-// };
+  if (images.length < 2)
+    return res.status(400).json({ message: 'Es necesario al menos 2 imagenes.' });
+
+  try {
+    await db.connect();
+    const productInDb = await Product.findOne({ slug: req.body.slug });
+
+    if (productInDb) {
+      await db.disconnect();
+      return res.status(400).json({ message: 'Ya existe un producto con el mismo slug.' });
+    }
+
+    const product = new Product(req.body);
+    await product.save();
+
+    await db.disconnect();
+    return res.status(200).json(product);
+  } catch (error) {
+    console.log(error);
+
+    await db.disconnect();
+    return res.status(500).json({ message: 'Error al crear producto.' });
+  }
+};
